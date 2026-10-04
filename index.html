@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Untuk Hani</title>
+<meta name="description" content="Halaman rahasia">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#ffd9e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#3d2b4f;
+  --ink-soft:#5a4766;
+  --rose:#ff8fa8;
+  --rose-soft:#ffd6e0;
+  --lav:#c2aaff;
+  --lav-soft:#e8dfff;
+  --mint:#9ee0c5;
+  --mint-soft:#dcf5ea;
+  --cream:#fff8ec;
+  --butter:#ffe08a;
+  --sky:#a9d8ff;
+  --peach:#ffc9a3;
+  --leaf:#8fca9e;
+  --leaf-dark:#5fa672;
+  --white:#fffdfb;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  font-family:'Quicksand',system-ui,-apple-system,sans-serif;
+  font-weight:600;
+  color:var(--ink);
+  background:
+    radial-gradient(900px 600px at 12% 5%, #ffe6ef 0%, transparent 55%),
+    radial-gradient(800px 600px at 88% 10%, #e9e0ff 0%, transparent 55%),
+    radial-gradient(1000px 700px at 50% 105%, #d8f5e6 0%, transparent 60%),
+    linear-gradient(180deg,#fffaf2 0%,#fff4ea 100%);
+  min-height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px 14px 60px;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ============================================================
+   BACKGROUND
+   ============================================================ */
+#petalCanvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:3;
+}
+#confetti{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:50;
+}
+#bgGarden{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.floaty{
+  position:absolute;
+  width:var(--size,70px);
+  opacity:.4;
+  animation:floaty var(--dur,11s) ease-in-out infinite;
+  animation-delay:var(--delay,0s);
+  will-change:transform;
+}
+.floaty svg{width:100%;height:auto;display:block}
+@keyframes floaty{
+  0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}
+  50%{transform:translateY(-22px) rotate(calc(var(--rot,0deg) + 10deg))}
+}
+.ground-vine{
+  position:fixed;bottom:-10px;left:0;width:100%;height:90px;
+  z-index:2;pointer-events:none;
+  opacity:.55;
+}
+.ground-vine svg{width:100%;height:100%;display:block}
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+.controls{
+  position:fixed;top:14px;right:14px;z-index:60;
+  display:flex;gap:9px;
+}
+.ctrl{
+  width:46px;height:46px;border-radius:50%;
+  border:2.5px solid var(--ink);
+  background:var(--white);
+  display:grid;place-items:center;
+  cursor:pointer;
+  box-shadow:0 3px 0 var(--ink);
+  transition:transform .12s ease, box-shadow .12s ease, background .2s;
+  padding:0;
+}
+.ctrl:active{transform:translateY(3px);box-shadow:0 0 0 var(--ink)}
+.ctrl svg{width:22px;height:22px;display:block}
+.ctrl.off{background:#f0eaf3;opacity:.55}
+
+/* ============================================================
+   STAGE & CARD
+   ============================================================ */
+.stage{width:100%;max-width:660px;position:relative;z-index:10}
+.card{
+  background:var(--white);
+  border:3px solid var(--ink);
+  border-radius:36px;
+  box-shadow:
+    0 12px 0 rgba(61,43,79,.15),
+    0 24px 60px rgba(61,43,79,.18),
+    inset 0 0 0 1px rgba(255,255,255,.9);
+  padding:34px 26px 34px;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 8% 5%, rgba(255,143,168,.13), transparent 32%),
+    radial-gradient(circle at 92% 95%, rgba(194,170,255,.15), transparent 34%),
+    radial-gradient(circle at 50% 50%, transparent 55%, rgba(255,224,138,.05) 100%);
+  pointer-events:none;
+}
+.corner-flower{
+  position:absolute;
+  width:76px;height:auto;
+  pointer-events:none;
+  z-index:1;
+  opacity:.85;
+}
+.corner-flower.tl{top:-14px;left:-14px;transform:rotate(-15deg)}
+.corner-flower.tr{top:-14px;right:-14px;transform:rotate(15deg) scaleX(-1)}
+.corner-flower.bl{bottom:-14px;left:-14px;transform:rotate(15deg) scaleY(-1)}
+.corner-flower.br{bottom:-14px;right:-14px;transform:rotate(-15deg) scale(-1,-1)}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+.screen{display:none;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:2}
+.screen.is-active{display:flex;animation:pop .5s cubic-bezier(.2,1.4,.5,1) both}
+@keyframes pop{
+  from{opacity:0;transform:translateY(18px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.title{
+  font-family:'Fraunces',serif;
+  font-weight:900;
+  font-size:clamp(30px,8.4vw,46px);
+  line-height:1.1;
+  margin:16px 0 12px;
+  letter-spacing:-.6px;
+  color:var(--ink);
+}
+.title .hl{
+  position:relative;
+  background:linear-gradient(180deg,transparent 62%, var(--butter) 62%);
+  padding:0 6px;border-radius:6px;
+}
+.title .hl::after{
+  content:"";
+  position:absolute;
+  bottom:-6px;left:50%;transform:translateX(-50%);
+  width:44px;height:6px;border-radius:4px;
+  background:var(--rose);
+  opacity:.5;
+}
+.subtitle{
+  font-size:clamp(15px,4.1vw,17px);
+  line-height:1.65;
+  color:var(--ink-soft);
+  margin:0 0 22px;
+  max-width:46ch;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:18px;
+  border:3px solid var(--ink);
+  border-radius:999px;
+  padding:14px 34px;
+  cursor:pointer;
+  color:var(--ink);
+  background:var(--rose);
+  box-shadow:0 5px 0 var(--ink);
+  transition:transform .1s ease, box-shadow .1s ease, filter .2s;
+  user-select:none;
+  letter-spacing:.2px;
+}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--ink)}
+.btn.lav{background:var(--lav)}
+.btn.mint{background:var(--mint)}
+.btn.butter{background:var(--butter)}
+.btn.ghost{
+  background:var(--white);
+  box-shadow:0 5px 0 rgba(61,43,79,.22);
+  font-size:15px;padding:11px 24px;
+}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+
+/* ============================================================
+   STICKER ROWS
+   ============================================================ */
+.sticker-row{
+  display:flex;gap:12px;justify-content:center;align-items:flex-end;
+  flex-wrap:wrap;margin:6px 0 8px;
+}
+.sticker-row svg{width:var(--sw,70px);height:auto;display:block}
+.bounce{display:inline-block;animation:bounce 2.6s ease-in-out infinite}
+.bounce:nth-child(2){animation-delay:.25s}
+.bounce:nth-child(3){animation-delay:.5s}
+.bounce:nth-child(4){animation-delay:.75s}
+.bounce:nth-child(5){animation-delay:1s}
+.bounce:nth-child(6){animation-delay:1.25s}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* ============================================================
+   DOTS
+   ============================================================ */
+.dots{display:flex;gap:10px;justify-content:center;margin-bottom:18px}
+.dot{
+  width:14px;height:14px;border-radius:50%;
+  border:2.5px solid var(--ink);background:var(--white);
+  transition:background .35s, transform .35s;
+}
+.dot.done{background:var(--leaf)}
+.dot.now{background:var(--rose);transform:scale(1.3)}
+
+/* ============================================================
+   RIDDLE BOX
+   ============================================================ */
+.qbox{
+  background:linear-gradient(180deg,#fffaf3,#fff1f6);
+  border:2.5px dashed #e3c9dc;
+  border-radius:24px;
+  padding:22px 20px;
+  margin:8px 0 22px;
+  width:100%;
+  position:relative;
+}
+.qbox::before{
+  content:"";
+  position:absolute;
+  top:-16px;left:50%;transform:translateX(-50%);
+  width:60px;height:32px;
+  background:var(--white);
+  border-radius:50%;
+  opacity:.9;
+  z-index:-1;
+}
+.qnum{
+  font-family:'Fraunces',serif;
+  font-size:13px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--rose);margin-bottom:10px;font-weight:700;
+}
+.qtext{
+  font-size:clamp(16px,4.4vw,19px);
+  line-height:1.6;
+  color:var(--ink);
+}
+.hint{
+  margin-top:14px;font-size:14.5px;color:#8a7a92;font-weight:600;
+  display:none;
+  padding:10px 14px;
+  background:var(--mint-soft);
+  border-radius:14px;
+  border:1.5px dashed var(--leaf);
+}
+.hint.show{display:block;animation:pop .35s both}
+
+/* ============================================================
+   INPUT & FEEDBACK
+   ============================================================ */
+.answer-row{display:flex;gap:9px;width:100%;max-width:420px}
+input[type=text],
+input[type=password]{
+  flex:1;min-width:0;
+  font-family:'Quicksand',sans-serif;font-weight:700;font-size:16.5px;
+  padding:14px 22px;border-radius:999px;
+  border:3px solid var(--ink);background:var(--white);color:var(--ink);
+  outline:none;transition:box-shadow .2s;
+}
+input::placeholder{color:#b8a9c0;font-weight:600}
+input:focus{box-shadow:0 0 0 6px rgba(194,170,255,.35)}
+.answer-row .btn{padding:14px 26px;font-size:17px}
+
+.feedback{
+  min-height:28px;margin-top:16px;
+  font-family:'Fraunces',serif;font-weight:700;font-size:17px;
+}
+.feedback.ok{color:#2f9e77}
+.feedback.no{color:#e2617f;animation:shake .45s}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%,60%{transform:translateX(-8px)}
+  40%,80%{transform:translateX(8px)}
+}
+
+/* ============================================================
+   LOCK SCREEN
+   ============================================================ */
+.lock-icon{
+  width:96px;height:96px;
+  margin:8px auto 4px;
+  display:block;
+}
+.lock-title{
+  font-family:'Fraunces',serif;
+  font-weight:900;
+  font-size:clamp(24px,6.6vw,32px);
+  margin:14px 0 8px;
+  color:var(--ink);
+}
+.lock-sub{
+  font-size:15px;
+  color:var(--ink-soft);
+  margin:0 0 24px;
+  max-width:38ch;
+  line-height:1.6;
+}
+.lock-input-wrap{
+  width:100%;
+  max-width:380px;
+  position:relative;
+}
+.lock-input-wrap input{
+  width:100%;
+  text-align:center;
+  font-size:17px;
+  letter-spacing:.5px;
+  padding:16px 22px;
+}
+.lock-btn-row{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+  justify-content:center;
+  width:100%;
+  max-width:380px;
+}
+.lock-btn-row .btn{
+  flex:1;
+  padding:14px 20px;
+  font-size:16.5px;
+}
+.lock-feedback{
+  min-height:26px;
+  margin-top:16px;
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:16px;
+  transition:color .2s;
+}
+.lock-feedback.ok{color:#2f9e77}
+.lock-feedback.no{color:#e2617f;animation:shake .45s}
+
+/* Attempts dots */
+.attempts{
+  display:flex;gap:7px;justify-content:center;margin-top:14px;
+}
+.attempts span{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--rose-soft);
+  border:1.8px solid var(--ink);
+  transition:background .3s, transform .3s;
+}
+.attempts span.used{background:var(--rose);transform:scale(1.1)}
+
+/* Hint reveal */
+.pass-hint{
+  font-size:13.5px;
+  color:#8a7a92;
+  margin-top:18px;
+  padding:10px 14px;
+  background:var(--mint-soft);
+  border-radius:14px;
+  border:1.5px dashed var(--leaf);
+  display:none;
+  max-width:400px;
+}
+.pass-hint.show{display:block;animation:pop .35s both}
+
+/* ============================================================
+   CAKE / FINALE
+   ============================================================ */
+.cake-wrap{margin:4px 0 8px;position:relative}
+.cake-svg{width:min(240px,64vw);height:auto;display:block}
+.flame{transform-origin:center bottom;animation:flicker .55s ease-in-out infinite alternate}
+@keyframes flicker{
+  from{transform:scaleY(1) scaleX(1);opacity:.92}
+  to{transform:scaleY(1.25) scaleX(.88);opacity:1}
+}
+.blown .flame{opacity:0;transform:scale(.2);transition:all .55s ease}
+.smoke{opacity:0;transition:opacity .7s ease .25s}
+.blown .smoke{opacity:.75;animation:smokeUp 2.4s ease-out forwards}
+@keyframes smokeUp{
+  0%{opacity:.8;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(-30px)}
+}
+
+.letter{
+  background:linear-gradient(180deg,#fffaf3,#fff0f5);
+  border:2.5px solid var(--ink);
+  border-radius:26px;
+  padding:24px 22px;
+  margin:20px 0 8px;
+  text-align:left;
+  font-size:clamp(15px,4.1vw,16.5px);
+  line-height:1.78;
+  width:100%;
+  box-shadow:0 6px 0 rgba(61,43,79,.12);
+  position:relative;
+}
+.letter::before{
+  content:"";
+  position:absolute;
+  top:14px;right:18px;
+  width:36px;height:36px;
+  background:var(--rose-soft);
+  border-radius:50%;
+  opacity:.4;
+}
+.letter p{margin:0 0 12px;position:relative;z-index:1}
+.letter p:last-child{margin-bottom:0}
+.sign{
+  font-family:'Fraunces',serif;font-weight:700;
+  text-align:right;color:var(--rose);font-size:18px;
+  margin-top:10px;
+}
+.tiny{font-size:13px;color:#a294ac;margin-top:22px;font-weight:600;letter-spacing:.4px}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.divider{
+  display:flex;justify-content:center;align-items:center;
+  gap:10px;margin:14px 0 4px;width:100%;
+}
+.divider .line{
+  flex:1;max-width:100px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--rose-soft),transparent);
+}
+.divider svg{width:26px;height:auto}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:440px){
+  .card{padding:28px 18px 30px;border-radius:30px}
+  .answer-row{flex-direction:column}
+  .answer-row .btn{width:100%}
+  .sticker-row svg{--sw:58px}
+  .corner-flower{width:56px}
+  .ctrl{width:42px;height:42px}
+  .ctrl svg{width:20px;height:20px}
+  .lock-btn-row{flex-direction:column}
+}
+@media(max-height:720px){
+  .cake-svg{width:min(180px,52vw)}
+  .card{padding:24px 20px 26px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="petalCanvas"></canvas>
+<canvas id="confetti"></canvas>
+<div id="bgGarden" aria-hidden="true"></div>
+<div class="ground-vine" aria-hidden="true" id="groundVine"></div>
+
+<div class="controls" id="controls" style="display:none">
+  <button class="ctrl" id="soundBtn" title="Suara narasi" aria-label="Suara narasi"></button>
+  <button class="ctrl" id="musicBtn" title="Putar lagu" aria-label="Putar lagu"></button>
+</div>
+
+<main class="stage">
+  <div class="card" id="card">
+
+    <div class="corner-flower tl" data-flower="roseSm"></div>
+    <div class="corner-flower tr" data-flower="daisySm"></div>
+    <div class="corner-flower bl" data-flower="tulipSm"></div>
+    <div class="corner-flower br" data-flower="lotusSm"></div>
+
+    <!-- ============================================================
+         SCREEN -1 : LOCK
+         ============================================================ -->
+    <section class="screen is-active" data-screen="-1">
+      <svg class="lock-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0 4)">
+          <path d="M42 52 V38 a18 18 0 0 1 36 0 V52"
+                fill="none" stroke="#3d2b4f" stroke-width="6" stroke-linecap="round"/>
+          <rect x="30" y="52" width="60" height="48" rx="12"
+                fill="#ffd6e0" stroke="#3d2b4f" stroke-width="4"/>
+          <circle cx="60" cy="72" r="6" fill="#3d2b4f"/>
+          <rect x="56" y="76" width="8" height="14" rx="3" fill="#3d2b4f"/>
+          <g transform="translate(78 20)">
+            <circle cx="0" cy="-7" r="5" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="7" cy="-2" r="5" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="4" cy="6" r="5" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="-4" cy="6" r="5" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="-7" cy="-2" r="5" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="0" cy="0" r="3.6" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+          </g>
+          <g transform="translate(24 100)">
+            <circle cx="0" cy="-7" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="7" cy="-2" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="4" cy="6" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="-4" cy="6" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="-7" cy="-2" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="2.2"/>
+            <circle cx="0" cy="0" r="3.6" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+          </g>
+        </g>
+      </svg>
+
+      <h1 class="lock-title">Halaman Ini Dikunci</h1>
+      <p class="lock-sub">
+        Ada taman rahasia di balik pintu ini. Masukkan kunci untuk membukanya.
+      </p>
+
+      <div class="lock-input-wrap">
+        <input type="password" id="passInput" placeholder="Kunci rahasia..." autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+      </div>
+
+      <div class="lock-btn-row">
+        <button class="btn" id="unlockBtn">Buka</button>
+        <button class="btn ghost" id="hintPassBtn" style="flex:0 0 auto;padding:14px 22px">Petunjuk</button>
+      </div>
+
+      <div class="lock-feedback" id="lockFeedback"></div>
+
+      <div class="attempts" id="attempts"></div>
+
+      <div class="pass-hint" id="passHint">
+        Kuncinya adalah nama kamu dan nama aku, dipisahkan tanda X. Contoh formatnya: <strong>Nama X Nama</strong>
+      </div>
+
+      <div class="sticker-row" style="margin-top:26px">
+        <span class="bounce" data-flower-inline="rose"></span>
+        <span class="bounce" data-flower-inline="butterfly"></span>
+        <span class="bounce" data-flower-inline="daisy"></span>
+        <span class="bounce" data-flower-inline="bee"></span>
+        <span class="bounce" data-flower-inline="tulip"></span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SCREEN 0 : INTRO
+         ============================================================ -->
+    <section class="screen" data-screen="0">
+      <div class="sticker-row" id="introStickers"></div>
+      <h1 class="title">Selamat Datang di<br><span class="hl">Taman Hani</span></h1>
+      <p class="subtitle">
+        Ada kejutan kecil yang tumbuh di sini, khusus buat kamu.
+        Tapi taman ini punya penjaga: <strong>4 teka-teki</strong> yang harus kamu jawab dulu.
+        Santai, semua jawabannya ada di sekitarmu.
+      </p>
+      <div class="divider">
+        <div class="line"></div>
+        <span data-flower="roseXs"></span>
+        <div class="line"></div>
+      </div>
+      <button class="btn" id="startBtn" style="margin-top:10px">Masuk Taman</button>
+      <p class="tiny">Pakai speaker ya, biar suaranya kedengaran</p>
+    </section>
+
+    <!-- ============================================================
+         SCREEN 1 : RIDDLE
+         ============================================================ -->
+    <section class="screen" data-screen="1">
+      <div class="dots" id="dots"></div>
+      <div class="sticker-row" id="riddleSticker"></div>
+      <div class="qbox">
+        <div class="qnum" id="qNum">Teka-teki 1 dari 4</div>
+        <div class="qtext" id="qText"></div>
+        <div class="hint" id="qHint"></div>
+      </div>
+      <div class="answer-row">
+        <input type="text" id="answerInput" placeholder="Tulis jawabanmu..." autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="btn lav" id="submitBtn">Jawab</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="btn ghost" id="hintBtn" style="margin-top:8px">Kasih Petunjuk</button>
+    </section>
+
+    <!-- ============================================================
+         SCREEN 4 : FINALE
+         ============================================================ -->
+    <section class="screen" data-screen="4">
+      <div class="cake-wrap">
+        <svg class="cake-svg" id="cakeSvg" viewBox="0 0 260 240" aria-label="Kue ulang tahun">
+          <rect x="98" y="18" width="9" height="38" rx="4" fill="#9ee0c5" stroke="#3d2b4f" stroke-width="3"/>
+          <rect x="96" y="36" width="13" height="5" rx="2" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+          <rect x="96" y="46" width="13" height="5" rx="2" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+
+          <rect x="126" y="12" width="9" height="44" rx="4" fill="#c2aaff" stroke="#3d2b4f" stroke-width="3"/>
+          <rect x="124" y="30" width="13" height="5" rx="2" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2.2"/>
+          <rect x="124" y="40" width="13" height="5" rx="2" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2.2"/>
+
+          <rect x="154" y="18" width="9" height="38" rx="4" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="3"/>
+          <rect x="152" y="36" width="13" height="5" rx="2" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+          <rect x="152" y="46" width="13" height="5" rx="2" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2.2"/>
+
+          <g class="flame">
+            <path d="M102 4 q10 12 0 20 q-10 -8 0 -20 z" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M102 10 q5 7 0 12 q-5 -5 0 -12 z" fill="#ff8fa8"/>
+          </g>
+          <g class="flame">
+            <path d="M130 -2 q10 12 0 20 q-10 -8 0 -20 z" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M130 4 q5 7 0 12 q-5 -5 0 -12 z" fill="#ff8fa8"/>
+          </g>
+          <g class="flame">
+            <path d="M158 4 q10 12 0 20 q-10 -8 0 -20 z" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M158 10 q5 7 0 12 q-5 -5 0 -12 z" fill="#ff8fa8"/>
+          </g>
+
+          <g class="smoke">
+            <circle cx="102" cy="6" r="4" fill="#cfc4d6"/>
+            <circle cx="130" cy="0" r="5" fill="#ded5e3"/>
+            <circle cx="158" cy="6" r="4" fill="#cfc4d6"/>
+          </g>
+
+          <path d="M58 106 q72 -46 144 0 z" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M58 106 h144 v24 h-144 z" fill="#fff0f5" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M60 106 q8 17 16 0 q8 17 16 0 q8 17 16 0 q8 17 16 0 q8 17 16 0 q8 17 16 0 q8 17 16 0 q8 17 16 0"
+                fill="#fff8ec" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+
+          <g transform="translate(130 84)">
+            <circle cx="0" cy="-10" r="7" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="10" cy="-3" r="7" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="6" cy="9" r="7" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="-6" cy="9" r="7" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="-10" cy="-3" r="7" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="0" cy="0" r="6" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2"/>
+          </g>
+
+          <rect x="38" y="130" width="184" height="58" rx="12" fill="#e8dfff" stroke="#3d2b4f" stroke-width="3"/>
+          <g transform="translate(72 160)">
+            <circle cx="0" cy="-7" r="5" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="7" cy="-2" r="5" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="4" cy="6" r="5" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="-4" cy="6" r="5" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="-7" cy="-2" r="5" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="0" cy="0" r="4" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+          </g>
+          <g transform="translate(130 160)">
+            <circle cx="0" cy="-7" r="5" fill="#9ee0c5" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="7" cy="-2" r="5" fill="#9ee0c5" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="4" cy="6" r="5" fill="#9ee0c5" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="-4" cy="6" r="5" fill="#9ee0c5" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="-7" cy="-2" r="5" fill="#9ee0c5" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="0" cy="0" r="4" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+          </g>
+          <g transform="translate(188 160)">
+            <circle cx="0" cy="-7" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="7" cy="-2" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="4" cy="6" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="-4" cy="6" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="-7" cy="-2" r="5" fill="#c2aaff" stroke="#3d2b4f" stroke-width="1.8"/>
+            <circle cx="0" cy="0" r="4" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+          </g>
+
+          <rect x="22" y="188" width="216" height="16" rx="8" fill="#fffdfb" stroke="#3d2b4f" stroke-width="3"/>
+          <path d="M30 196 q-12 -6 -18 2 q10 6 18 -2" fill="#8fca9e" stroke="#3d2b4f" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M230 196 q12 -6 18 2 q-10 6 -18 -2" fill="#8fca9e" stroke="#3d2b4f" stroke-width="2.2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h1 class="title">Selamat Ulang Tahun,<br><span class="hl">Hani</span>!</h1>
+
+      <div class="sticker-row" id="finalStickersTop" style="margin-bottom:4px"></div>
+
+      <div class="letter" id="letter">
+        <p>Hai Hani — juga dikenal sebagai <strong>Fany</strong> atau <strong>Zenia</strong>.</p>
+        <p>Selamat ulang tahun ya. Semoga di tahun baru ini kamu dikelilingi orang-orang yang bikin kamu merasa aman, dihargai, dan disayang. Rezekinya lancar, kesehatannya jaga, dan semua hal baik yang kamu tunggu datang tepat waktu — bahkan lebih cepat.</p>
+        <p>Taman ini tumbuh khusus buat kamu. Setiap bunganya mewakili satu doa yang aku titipkan diam-diam. Kamu nggak harus tahu satu-satu, cukup rasakan harumnya.</p>
+        <p>Terima kasih sudah jadi kamu. Jangan lupa bahagia hari ini — minimal hari ini aja dulu.</p>
+        <p class="sign">— dari yang bikin web ini</p>
+      </div>
+
+      <div class="divider">
+        <div class="line"></div>
+        <span data-flower="daisyXs"></span>
+        <div class="line"></div>
+      </div>
+
+      <div class="sticker-row" id="finalStickers"></div>
+
+      <div class="btn-row" style="margin-top:22px">
+        <button class="btn" id="blowBtn">Tiup Lilin</button>
+        <button class="btn mint" id="songBtn">Nyanyi Bareng</button>
+      </div>
+      <div class="btn-row" style="margin-top:8px">
+        <button class="btn ghost" id="againBtn">Ulangi dari Awal</button>
+      </div>
+      <p class="tiny">Dibuat khusus buat kamu</p>
+    </section>
+
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   0. KONFIGURASI PASSWORD
+   ============================================================
+   Ganti "Hani X Rein" di bawah untuk mengubah password.
+   Normalisasi: case-insensitive, spasi fleksibel, tanda baca diabaikan.
+   ============================================================ */
+const SECRET_PASSWORD = "Hani X Rein";
+
+/* Batas percobaan sebelum muncul petunjuk otomatis */
+const MAX_ATTEMPTS_BEFORE_HINT = 3;
+
+/* ============================================================
+   1. SVG FLOWERS & STICKERS
+   ============================================================ */
+const S = '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">';
+const E = '</svg>';
+
+function flower5(petalColor, petalStroke, centerColor, centerStroke, r = 15){
+  const pts = [[0,-1],[0.95,-0.31],[0.59,0.81],[-0.59,0.81],[-0.95,-0.31]];
+  const petals = pts.map(([x,y]) =>
+    `<circle cx="${60 + x*22}" cy="${60 + y*22}" r="${r}" fill="${petalColor}" stroke="${petalStroke}" stroke-width="2.6"/>`
+  ).join('');
+  return `<circle cx="60" cy="60" r="${r+2}" fill="${centerColor}" stroke="${centerStroke}" stroke-width="2.6"/>${petals}`;
+}
+
+const FLOWERS = {
+  rose: S + `
+    <ellipse cx="60" cy="40" rx="18" ry="22" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="42" cy="60" rx="22" ry="18" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="60" cy="80" rx="18" ry="22" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="78" cy="60" rx="22" ry="18" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="60" cy="60" rx="20" ry="20" fill="#ffb3c6" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="60" cy="60" rx="12" ry="12" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.4"/>
+    <circle cx="60" cy="60" r="5" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2"/>
+    <circle cx="48" cy="52" r="3" fill="#fff" opacity=".6"/>
+    <path d="M60 92 q-8 12 -20 14" stroke="#5fa672" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+    <path d="M60 92 q8 12 20 14" stroke="#5fa672" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+    <path d="M40 106 q-10 0 -14 -8 q10 -4 14 8 z" fill="#8fca9e" stroke="#3d2b4f" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M80 106 q10 0 14 -8 q-10 -4 -14 8 z" fill="#8fca9e" stroke="#3d2b4f" stroke-width="2.4" stroke-linejoin="round"/>
+  ` + E,
+
+  tulip: S + `
+    <path d="M60 30 q-18 6 -22 34 q10 8 22 8 q12 0 22 -8 q-4 -28 -22 -34 z" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M38 32 q-6 16 -4 32 q6 -2 8 -8 q-4 -12 -4 -24 z" fill="#ffb3c6" stroke="#3d2b4f" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M82 32 q6 16 4 32 q-6 -2 -8 -8 q4 -12 4 -24 z" fill="#ffb3c6" stroke="#3d2b4f" stroke-width="2.6" stroke-linejoin="round"/>
+    <ellipse cx="60" cy="60" rx="6" ry="12" fill="#fff0f5" opacity=".6"/>
+    <path d="M60 74 v30" stroke="#5fa672" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M60 88 q-16 2 -22 -8 q14 -6 22 8 z" fill="#8fca9e" stroke="#3d2b4f" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M60 96 q16 2 22 -8 q-14 -6 -22 8 z" fill="#8fca9e" stroke="#3d2b4f" stroke-width="2.4" stroke-linejoin="round"/>
+  ` + E,
+
+  daisy: S + `
+    ${flower5('#fffdfb','#3d2b4f','#ffe08a','#3d2b4f',17)}
+    <path d="M60 88 v16" stroke="#5fa672" stroke-width="3" stroke-linecap="round"/>
+  ` + E,
+
+  sunflower: S + `
+    <g transform="translate(60 58)">
+      ${[[0,-1],[0.71,-0.71],[1,0],[0.71,0.71],[0,1],[-0.71,0.71],[-1,0],[-0.71,-0.71]].map(([x,y]) =>
+        `<ellipse cx="${x*30}" cy="${y*30}" rx="13" ry="20" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2.8"
+          transform="rotate(${Math.atan2(y,x)*180/Math.PI + 90} ${x*30} ${y*30})"/>`
+      ).join('')}
+    </g>
+    <circle cx="60" cy="58" r="18" fill="#c98b4b" stroke="#3d2b4f" stroke-width="3"/>
+    <circle cx="54" cy="54" r="2.2" fill="#3d2b4f"/>
+    <circle cx="66" cy="54" r="2.2" fill="#3d2b4f"/>
+    <circle cx="60" cy="62" r="2.2" fill="#3d2b4f"/>
+    <path d="M60 76 v26" stroke="#5fa672" stroke-width="3.4" stroke-linecap="round"/>
+  ` + E,
+
+  lotus: S + `
+    <path d="M60 30 q-14 22 -12 42 q6 6 12 6 q6 0 12 -6 q2 -20 -12 -42 z" fill="#ffb3c6" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M60 34 q-22 18 -26 38 q10 8 26 8 q16 0 26 -8 q-4 -20 -26 -38 z" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8" stroke-linejoin="round" opacity=".9"/>
+    <path d="M34 72 q26 -6 52 0 q-26 20 -52 0 z" fill="#e8dfff" stroke="#3d2b4f" stroke-width="2.8" stroke-linejoin="round"/>
+    <ellipse cx="60" cy="60" rx="5" ry="10" fill="#fff" opacity=".55"/>
+    <circle cx="60" cy="76" r="3.5" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+  ` + E,
+
+  cherry: S + `
+    <circle cx="42" cy="42" r="14" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8"/>
+    <circle cx="60" cy="34" r="14" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8"/>
+    <circle cx="78" cy="42" r="14" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8"/>
+    <circle cx="46" cy="60" r="14" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8"/>
+    <circle cx="74" cy="60" r="14" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8"/>
+    <circle cx="60" cy="72" r="14" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8"/>
+    <circle cx="60" cy="52" r="9" fill="#fff0f5" stroke="#3d2b4f" stroke-width="2.4"/>
+    <circle cx="60" cy="52" r="3.5" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+  ` + E,
+
+  hyacinth: S + `
+    ${[-30,-15,0,15,30].map(y =>
+      [[-16,0],[16,0],[0,0]].map(([x]) =>
+        `<circle cx="${60 + x + y*0.3}" cy="${52 + y}" r="8" fill="#c2aaff" stroke="#3d2b4f" stroke-width="2.4"/>`
+      ).join('')
+    ).join('')}
+    <path d="M60 82 v24" stroke="#5fa672" stroke-width="3" stroke-linecap="round"/>
+  ` + E,
+
+  roseSm: S + `
+    <ellipse cx="60" cy="44" rx="14" ry="16" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="46" cy="60" rx="16" ry="14" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="60" cy="76" rx="14" ry="16" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="74" cy="60" rx="16" ry="14" fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="60" cy="60" rx="15" ry="15" fill="#ffb3c6" stroke="#3d2b4f" stroke-width="3"/>
+    <circle cx="60" cy="60" r="5" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2"/>
+  ` + E,
+
+  daisySm: S + `${flower5('#fffdfb','#3d2b4f','#ffe08a','#3d2b4f',13)}` + E,
+
+  tulipSm: S + `
+    <path d="M60 34 q-14 6 -18 30 q8 6 18 6 q10 0 18 -6 q-4 -24 -18 -30 z" fill="#c2aaff" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <ellipse cx="60" cy="58" rx="5" ry="10" fill="#fff" opacity=".5"/>
+  ` + E,
+
+  lotusSm: S + `
+    <path d="M60 34 q-12 20 -10 38 q5 6 10 6 q5 0 10 -6 q2 -18 -10 -38 z" fill="#ffb3c6" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M60 38 q-20 16 -24 34 q10 8 24 8 q14 0 24 -8 q-4 -18 -24 -34 z" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.8" opacity=".9"/>
+  ` + E,
+
+  roseXs: S + `
+    <circle cx="60" cy="60" r="18" fill="#ffb3c6" stroke="#3d2b4f" stroke-width="3"/>
+    <circle cx="60" cy="60" r="9" fill="#ffd6e0" stroke="#3d2b4f" stroke-width="2.4"/>
+    <circle cx="60" cy="60" r="3.5" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+  ` + E,
+
+  daisyXs: S + `${flower5('#fffdfb','#3d2b4f','#ffe08a','#3d2b4f',11)}` + E,
+
+  butterfly: S + `
+    <ellipse cx="42" cy="48" rx="20" ry="24" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="78" cy="48" rx="20" ry="24" fill="#ffc9a3" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="46" cy="76" rx="16" ry="18" fill="#ffe08a" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="74" cy="76" rx="16" ry="18" fill="#ffe08a" stroke="#3d2b4f" stroke-width="3"/>
+    <ellipse cx="60" cy="62" rx="6" ry="24" fill="#3d2b4f"/>
+    <path d="M60 40 q-6 -12 -14 -16 M60 40 q6 -12 14 -16" stroke="#3d2b4f" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="46" cy="48" r="3" fill="#3d2b4f"/>
+    <circle cx="74" cy="48" r="3" fill="#3d2b4f"/>
+  ` + E,
+
+  bee: S + `
+    <ellipse cx="60" cy="66" rx="26" ry="22" fill="#ffe08a" stroke="#3d2b4f" stroke-width="3"/>
+    <path d="M40 58 h40 M38 68 h44 M42 78 h36" stroke="#3d2b4f" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="46" cy="38" rx="14" ry="10" fill="#e8f7ff" stroke="#3d2b4f" stroke-width="2.6" opacity=".9"/>
+    <ellipse cx="74" cy="38" rx="14" ry="10" fill="#e8f7ff" stroke="#3d2b4f" stroke-width="2.6" opacity=".9"/>
+    <circle cx="52" cy="66" r="3" fill="#3d2b4f"/>
+    <path d="M60 44 q-4 -10 -10 -14 M60 44 q4 -10 10 -14" stroke="#3d2b4f" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  ` + E,
+
+  leaf: S + `
+    <path d="M60 20 q-40 30 -40 55 q0 15 40 25 q40 -10 40 -25 q0 -25 -40 -55 z" fill="#8fca9e" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M60 30 v60 M60 50 l-18 -8 M60 65 l-18 -8 M60 50 l18 -8 M60 65 l18 -8" stroke="#3d2b4f" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  ` + E,
+
+  heartFlower: S + `
+    <path d="M60 100 C18 72 12 46 29 32 C44 19 58 28 60 43 C62 28 76 19 91 32 C108 46 102 72 60 100 Z"
+          fill="#ff8fa8" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="46" cy="52" r="3.8" fill="#3d2b4f"/>
+    <circle cx="74" cy="52" r="3.8" fill="#3d2b4f"/>
+    <path d="M51 64 q9 8 18 0" stroke="#3d2b4f" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="34" cy="42" r="7" fill="#fff" opacity=".5"/>
+    <g transform="translate(60 78)">
+      <circle cx="0" cy="-7" r="5" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="7" cy="-2" r="5" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="4" cy="6" r="5" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="-4" cy="6" r="5" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="-7" cy="-2" r="5" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="0" cy="0" r="3.5" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.6"/>
+    </g>
+  ` + E,
+
+  cupcake: S + `
+    <path d="M30 68 h60 l-8 44 h-44 z" fill="#f7c6a0" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M42 88 v20 M60 88 v20 M78 88 v20" stroke="#3d2b4f" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M25 68 q35 -44 70 0 z" fill="#ffc8d6" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="46" cy="54" r="4" fill="#3d2b4f"/>
+    <circle cx="74" cy="54" r="4" fill="#3d2b4f"/>
+    <path d="M51 64 q9 6 18 0" stroke="#3d2b4f" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="60" cy="20" r="6" fill="#ffe08a" stroke="#3d2b4f" stroke-width="2.6"/>
+    <g transform="translate(60 32)">
+      <circle cx="0" cy="-5" r="4" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="5" cy="-1.5" r="4" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="3" cy="4" r="4" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="-3" cy="4" r="4" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="-5" cy="-1.5" r="4" fill="#fffdfb" stroke="#3d2b4f" stroke-width="2"/>
+      <circle cx="0" cy="0" r="2.6" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.5"/>
+    </g>
+  ` + E,
+
+  gift: S + `
+    <rect x="22" y="54" width="76" height="52" rx="10" fill="#c2aaff" stroke="#3d2b4f" stroke-width="3"/>
+    <rect x="14" y="36" width="92" height="22" rx="10" fill="#dccdff" stroke="#3d2b4f" stroke-width="3"/>
+    <rect x="54" y="36" width="12" height="70" fill="#ffe08a" stroke="#3d2b4f" stroke-width="3"/>
+    <path d="M60 38 q-26 -6 -21 -19 q5 -11 21 19" fill="#ffe08a" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M60 38 q26 -6 21 -19 q-5 -11 -21 19" fill="#ffe08a" stroke="#3d2b4f" stroke-width="3" stroke-linejoin="round"/>
+  ` + E
+};
+
+/* ============================================================
+   2. RIDDLES
+   ============================================================ */
+const RIDDLES = [
+  {
+    q: "Aku punya kelopak, tapi aku bukan kupu-kupu. Aku punya tangkai, tapi aku bukan payung. Aku harum dan sering jadi hadiah. Aku apa?",
+    answers: ["bunga", "bunga mawar", "kembang", "bunga melati"],
+    hint: "Aku tumbuh di taman. Di halaman ini ada banyak versi diriku.",
+    sticker: "rose"
+  },
+  {
+    q: "Semakin banyak kamu ambil, semakin besar aku. Tapi kalau kamu isi, aku jadi kecil lagi. Aku apa?",
+    answers: ["lubang", "lubangnya", "lubang tanah", "hole"],
+    hint: "Ada di jalanan, kadang bikin motor kesandung.",
+    sticker: "leaf"
+  },
+  {
+    q: "Aku punya wajah bulat dan dua tangan yang terus berputar, tapi aku tidak punya kaki. Aku apa?",
+    answers: ["jam", "jam dinding", "arloji", "jam tangan"],
+    hint: "Kamu pakai aku tiap hari buat tahu kapan harus bangun.",
+    sticker: "sunflower"
+  },
+  {
+    q: "Aku manis, aku bulat atau kotak, dan di atas kepalaku ada lilin kecil. Hari ini aku yang paling ditunggu. Aku apa?",
+    answers: ["kue", "kue ulang tahun", "cake", "kue tart", "tart", "birthday cake"],
+    hint: "Nanti kamu yang tiup lilinnya, lho.",
+    sticker: "cupcake"
+  }
+];
+
+/* ============================================================
+   3. STATE
+   ============================================================ */
+let current = 0;
+let soundOn = true;
+let musicPlaying = false;
+let audioCtx = null;
+let musicTimer = null;
+let confettiRAF = null;
+let confettiParts = [];
+let wrongAttempts = 0;
+let isUnlocked = false;
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+function normalize(str){
+  return String(str)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const NORMALIZED_PASSWORD = normalize(SECRET_PASSWORD);
+
+/* ============================================================
+   4. INLINE FLOWERS + CORNER + DIVIDERS
+   ============================================================ */
+$$('[data-flower]').forEach(el => {
+  const key = el.dataset.flower;
+  if(FLOWERS[key]) el.innerHTML = FLOWERS[key];
+  const svg = el.querySelector('svg');
+  if(svg && !el.classList.contains('corner-flower')){
+    svg.style.width = '26px';
+    svg.style.height = 'auto';
+  }
+});
+
+$$('[data-flower-inline]').forEach(el => {
+  const key = el.dataset.flowerInline;
+  if(FLOWERS[key]) el.innerHTML = FLOWERS[key];
+});
+
+/* ============================================================
+   5. GROUND VINE
+   ============================================================ */
+function buildGroundVine(){
+  const el = document.getElementById('groundVine');
+  el.innerHTML = `
+    <svg viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 60 Q150 20 300 55 T600 55 T900 55 T1200 55"
+            fill="none" stroke="#5fa672" stroke-width="3" opacity=".7"/>
+      <path d="M0 75 Q200 45 400 70 T800 70 T1200 70"
+            fill="none" stroke="#8fca9e" stroke-width="2.4" opacity=".6"/>
+      ${Array.from({length:20}).map((_,i) => {
+        const x = 30 + i * 60;
+        const y = 60 + Math.sin(i * 1.2) * 8;
+        const colors = ['#ff8fa8','#c2aaff','#ffe08a','#ffc9a3','#ffb3c6'];
+        const c = colors[i % colors.length];
+        return `
+          <g transform="translate(${x} ${y})">
+            <circle cx="0" cy="-8" r="6" fill="${c}" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="7" cy="-3" r="6" fill="${c}" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="4" cy="5" r="6" fill="${c}" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="-4" cy="5" r="6" fill="${c}" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="-7" cy="-3" r="6" fill="${c}" stroke="#3d2b4f" stroke-width="2"/>
+            <circle cx="0" cy="0" r="4" fill="#ffe08a" stroke="#3d2b4f" stroke-width="1.8"/>
+          </g>
+        `;
+      }).join('')}
+    </svg>
+  `;
+}
+buildGroundVine();
+
+/* ============================================================
+   6. SPEECH
+   ============================================================ */
+let voicesReady = false;
+let idVoice = null;
+
+function pickVoice(){
+  if(!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  if(!voices.length) return;
+  idVoice =
+    voices.find(v => /id[-_]ID/i.test(v.lang)) ||
+    voices.find(v => /indones/i.test(v.name)) ||
+    voices.find(v => /^ms|^jv/i.test(v.lang)) ||
+    null;
+  voicesReady = true;
+}
+if('speechSynthesis' in window){
+  pickVoice();
+  speechSynthesis.onvoiceschanged = pickVoice;
+}
+function speak(text, opts = {}){
+  if(!soundOn || !('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'id-ID';
+    if(!voicesReady) pickVoice();
+    if(idVoice) u.voice = idVoice;
+    u.rate  = opts.rate  ?? 0.95;
+    u.pitch = opts.pitch ?? 1.15;
+    u.volume = 1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function stopSpeak(){
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+}
+
+/* ============================================================
+   7. MUSIC
+   ============================================================ */
+const MELODY = [
+  [392.00,.5],[392.00,.5],[440.00,1],[392.00,1],[523.25,1],[493.88,2],
+  [392.00,.5],[392.00,.5],[440.00,1],[392.00,1],[587.33,1],[523.25,2],
+  [392.00,.5],[392.00,.5],[783.99,1],[659.25,1],[523.25,1],[493.88,1],[440.00,1],
+  [698.46,.5],[698.46,.5],[659.25,1],[523.25,1],[587.33,1],[523.25,2.4]
+];
+const BPM = 132;
+const BEAT = 60 / BPM;
+
+function ensureCtx(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playNote(freq, startTime, dur){
+  const ctx = audioCtx;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.value = freq;
+
+  const osc2 = ctx.createOscillator();
+  const gain2 = ctx.createGain();
+  osc2.type = 'sine';
+  osc2.frequency.value = freq * 2;
+  gain2.gain.value = 0.10;
+
+  const attack = 0.012, release = Math.min(0.35, dur * 0.7);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.22, startTime + attack);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur + release);
+
+  osc.connect(gain);  gain.connect(ctx.destination);
+  osc2.connect(gain2); gain2.connect(ctx.destination);
+
+  osc.start(startTime);  osc.stop(startTime + dur + release + 0.05);
+  osc2.start(startTime); osc2.stop(startTime + dur + release + 0.05);
+}
+function playMelody(onFinish){
+  ensureCtx();
+  stopMelody();
+  musicPlaying = true;
+  updateMusicBtn();
+
+  let t = audioCtx.currentTime + 0.12;
+  MELODY.forEach(([f, d]) => {
+    playNote(f, t, d * BEAT * 0.92);
+    t += d * BEAT;
+  });
+
+  const total = (t - audioCtx.currentTime) * 1000;
+  musicTimer = setTimeout(() => {
+    musicPlaying = false;
+    updateMusicBtn();
+    if(typeof onFinish === 'function') onFinish();
+  }, total + 200);
+}
+function stopMelody(){
+  if(musicTimer){ clearTimeout(musicTimer); musicTimer = null; }
+  musicPlaying = false;
+  updateMusicBtn();
+}
+function updateMusicBtn(){
+  const b = $('#musicBtn');
+  if(!b) return;
+  b.classList.toggle('off', !musicPlaying);
+  b.innerHTML = musicPlaying
+    ? `<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="5" width="4" height="14" rx="1.6" fill="#3d2b4f"/><rect x="14" y="5" width="4" height="14" rx="1.6" fill="#3d2b4f"/></svg>`
+    : `<svg viewBox="0 0 24 24" fill="none"><path d="M9 18V7l10-2v11" stroke="#3d2b4f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#3d2b4f"/><circle cx="16.5" cy="16" r="2.8" fill="#3d2b4f"/></svg>`;
+}
+
+/* ============================================================
+   8. CONFETTI
+   ============================================================ */
+const cvs = $('#confetti');
+const cx2d = cvs.getContext('2d');
+const COLORS = ['#ff8fa8','#c2aaff','#9ee0c5','#ffe08a','#a9d8ff','#ffd6e0','#ffffff','#ffc9a3'];
+
+function fitCanvas(){
+  cvs.width = window.innerWidth;
+  cvs.height = window.innerHeight;
+}
+fitCanvas();
+window.addEventListener('resize', fitCanvas);
+
+function burst(n = 130, originX = window.innerWidth / 2, originY = window.innerHeight * 0.42){
+  for(let i = 0; i < n; i++){
+    confettiParts.push({
+      x: originX, y: originY,
+      vx: (Math.random() - 0.5) * 13,
+      vy: Math.random() * -13 - 3,
+      g: 0.28 + Math.random() * 0.18,
+      w: 6 + Math.random() * 8,
+      h: 8 + Math.random() * 10,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.32,
+      color: COLORS[(Math.random() * COLORS.length) | 0],
+      life: 1,
+      decay: 0.004 + Math.random() * 0.005,
+      isPetal: Math.random() < 0.45
+    });
+  }
+  if(!confettiRAF) confettiRAF = requestAnimationFrame(drawConfetti);
+}
+
+function drawConfetti(){
+  cx2d.clearRect(0, 0, cvs.width, cvs.height);
+  for(let i = confettiParts.length - 1; i >= 0; i--){
+    const p = confettiParts[i];
+    p.vy += p.g;
+    p.vx *= 0.995;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vr;
+    p.life -= p.decay;
+    if(p.life <= 0 || p.y > cvs.height + 60){
+      confettiParts.splice(i, 1);
+      continue;
+    }
+    cx2d.save();
+    cx2d.globalAlpha = Math.max(0, Math.min(1, p.life));
+    cx2d.translate(p.x, p.y);
+    cx2d.rotate(p.rot);
+    cx2d.fillStyle = p.color;
+    if(p.isPetal){
+      cx2d.beginPath();
+      cx2d.ellipse(0, 0, p.w * 0.8, p.h * 0.5, 0, 0, Math.PI * 2);
+      cx2d.fill();
+    }else{
+      cx2d.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    }
+    cx2d.restore();
+  }
+  if(confettiParts.length){
+    confettiRAF = requestAnimationFrame(drawConfetti);
+  }else{
+    cx2d.clearRect(0, 0, cvs.width, cvs.height);
+    confettiRAF = null;
+  }
+}
+
+/* ============================================================
+   9. FALLING PETALS
+   ============================================================ */
+const petalCvs = document.getElementById('petalCanvas');
+const pCtx = petalCvs.getContext('2d');
+const PETAL_COLORS = ['#ff8fa8','#ffb3c6','#ffd6e0','#c2aaff','#e8dfff','#ffe08a','#ffc9a3'];
+
+let petals = [];
+let petalRAF = null;
+
+function fitPetal(){
+  petalCvs.width = window.innerWidth;
+  petalCvs.height = window.innerHeight;
+}
+fitPetal();
+window.addEventListener('resize', fitPetal);
+
+function makePetal(){
+  return {
+    x: Math.random() * petalCvs.width,
+    y: -20 - Math.random() * 60,
+    size: 6 + Math.random() * 10,
+    vy: 0.4 + Math.random() * 0.7,
+    vx: -0.4 + Math.random() * 0.8,
+    rot: Math.random() * Math.PI * 2,
+    vr: -0.02 + Math.random() * 0.04,
+    sway: Math.random() * Math.PI * 2,
+    swaySpeed: 0.01 + Math.random() * 0.02,
+    color: PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0],
+    alpha: 0.35 + Math.random() * 0.4
+  };
+}
+
+function initPetals(){
+  const count = window.innerWidth < 600 ? 22 : 42;
+  petals = Array.from({length: count}, () => {
+    const p = makePetal();
+    p.y = Math.random() * petalCvs.height;
+    return p;
+  });
+  if(!petalRAF) petalRAF = requestAnimationFrame(drawPetals);
+}
+
+function drawPetals(){
+  pCtx.clearRect(0, 0, petalCvs.width, petalCvs.height);
+  petals.forEach(p => {
+    p.sway += p.swaySpeed;
+    p.x += p.vx + Math.sin(p.sway) * 0.6;
+    p.y += p.vy;
+    p.rot += p.vr;
+    if(p.y > petalCvs.height + 30){
+      p.y = -20;
+      p.x = Math.random() * petalCvs.width;
+    }
+    if(p.x < -30) p.x = petalCvs.width + 20;
+    if(p.x > petalCvs.width + 30) p.x = -20;
+    pCtx.save();
+    pCtx.globalAlpha = p.alpha;
+    pCtx.translate(p.x, p.y);
+    pCtx.rotate(p.rot);
+    pCtx.fillStyle = p.color;
+    pCtx.beginPath();
+    pCtx.ellipse(0, 0, p.size, p.size * 0.6, 0, 0, Math.PI * 2);
+    pCtx.fill();
+    pCtx.restore();
+  });
+  petalRAF = requestAnimationFrame(drawPetals);
+}
+
+initPetals();
+
+/* ============================================================
+   10. BG GARDEN
+   ============================================================ */
+function spawnBgStickers(){
+  const wrap = $('#bgGarden');
+  const keys = ['rose','daisy','tulip','sunflower','lotus','cherry','hyacinth','butterfly','bee','leaf','heartFlower','roseSm','daisySm'];
+  const count = window.innerWidth < 600 ? 14 : 22;
+  for(let i = 0; i < count; i++){
+    const d = document.createElement('div');
+    d.className = 'floaty';
+    const key = keys[i % keys.length];
+    d.innerHTML = FLOWERS[key];
+    d.style.left = (Math.random() * 94) + 'vw';
+    d.style.top = (Math.random() * 92) + 'vh';
+    d.style.setProperty('--size', (34 + Math.random() * 54) + 'px');
+    d.style.setProperty('--dur', (8 + Math.random() * 8) + 's');
+    d.style.setProperty('--delay', (Math.random() * -10) + 's');
+    d.style.setProperty('--rot', (Math.random() * 50 - 25) + 'deg');
+    d.style.opacity = (0.13 + Math.random() * 0.2).toFixed(2);
+    wrap.appendChild(d);
+  }
+}
+spawnBgStickers();
+
+/* ============================================================
+   11. NAVIGASI
+   ============================================================ */
+function showScreen(n){
+  $$('.screen').forEach(s => {
+    s.classList.toggle('is-active', Number(s.dataset.screen) === n);
+  });
+  $('#card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* ============================================================
+   12. STICKER ROWS
+   ============================================================ */
+function fillStickers(el, keys){
+  if(!el) return;
+  el.innerHTML = keys.map(k => {
+    const svg = FLOWERS[k] || '';
+    return `<span class="bounce">${svg}</span>`;
+  }).join('');
+}
+fillStickers($('#introStickers'), ['rose','butterfly','daisy','bee','tulip']);
+fillStickers($('#finalStickersTop'), ['butterfly','rose','bee']);
+fillStickers($('#finalStickers'), ['rose','daisy','tulip','sunflower','lotus','cherry','hyacinth','heartFlower','leaf','gift','cupcake']);
+
+/* ============================================================
+   13. PASSWORD GATE
+   ============================================================ */
+const attemptsEl = $('#attempts');
+function renderAttempts(){
+  attemptsEl.innerHTML = Array.from({length: MAX_ATTEMPTS_BEFORE_HINT})
+    .map((_, i) => `<span class="${i < wrongAttempts ? 'used' : ''}"></span>`)
+    .join('');
+}
+renderAttempts();
+
+function tryUnlock(){
+  if(isUnlocked) return;
+
+  const inp = $('#passInput');
+  const fb = $('#lockFeedback');
+  const val = normalize(inp.value);
+
+  if(!val){
+    fb.textContent = 'Isi dulu kuncinya ya.';
+    fb.className = 'lock-feedback no';
+    return;
+  }
+
+  if(val === NORMALIZED_PASSWORD){
+    isUnlocked = true;
+    fb.textContent = 'Kunci benar. Pintu terbuka...';
+    fb.className = 'lock-feedback ok';
+    inp.disabled = true;
+    $('#unlockBtn').disabled = true;
+    $('#hintPassBtn').style.display = 'none';
+
+    // show controls
+    $('#controls').style.display = 'flex';
+
+    // efek
+    burst(160, window.innerWidth / 2, window.innerHeight * 0.4);
+    setTimeout(() => burst(100, window.innerWidth * 0.25, window.innerHeight * 0.5), 250);
+    setTimeout(() => burst(100, window.innerWidth * 0.75, window.innerHeight * 0.5), 500);
+
+    speak('Kunci benar. Selamat datang, Hani.');
+
+    // masuk ke intro
+    setTimeout(() => {
+      showScreen(0);
+      speak('Halo Hani! Selamat ulang tahun ya. Sebelum kejutannya, jawab empat teka-teki dulu yuk.');
+    }, 1500);
+    return;
+  }
+
+  // salah
+  wrongAttempts++;
+  renderAttempts();
+  fb.textContent = 'Kunci salah. Coba lagi ya.';
+  fb.className = 'lock-feedback no';
+  void fb.offsetWidth;
+  inp.select();
+  speak('Kunci salah. Coba lagi ya.');
+
+  // show hint after N attempts
+  if(wrongAttempts >= MAX_ATTEMPTS_BEFORE_HINT){
+    $('#passHint').classList.add('show');
+  }
+}
+
+$('#unlockBtn').addEventListener('click', tryUnlock);
+$('#passInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') tryUnlock();
+});
+
+$('#hintPassBtn').addEventListener('click', () => {
+  $('#passHint').classList.add('show');
+  speak('Kuncinya adalah nama kamu dan nama aku, dipisahkan tanda X.');
+});
+
+/* Auto-focus ke input password */
+setTimeout(() => {
+  const el = $('#passInput');
+  if(el && !isUnlocked) el.focus();
+}, 400);
+
+/* ============================================================
+   14. INTRO -> RIDDLE
+   ============================================================ */
+$('#startBtn').addEventListener('click', () => {
+  ensureCtx();
+  speak("Oke, mulai. Teka-teki pertama.");
+  current = 0;
+  renderRiddle();
+  showScreen(1);
+});
+
+/* ============================================================
+   15. RIDDLE FLOW
+   ============================================================ */
+function renderDots(){
+  $('#dots').innerHTML = RIDDLES.map((_, i) => {
+    const cls = i < current ? 'done' : (i === current ? 'now' : '');
+    return `<span class="dot ${cls}"></span>`;
+  }).join('');
+}
+
+function renderRiddle(){
+  const r = RIDDLES[current];
+  renderDots();
+  $('#riddleSticker').innerHTML = `<span class="bounce">${FLOWERS[r.sticker]}</span>`;
+  $('#qNum').textContent = `Teka-teki ${current + 1} dari ${RIDDLES.length}`;
+  $('#qText').textContent = r.q;
+  $('#qHint').textContent = 'Petunjuk: ' + r.hint;
+  $('#qHint').classList.remove('show');
+
+  const inp = $('#answerInput');
+  inp.value = '';
+  inp.disabled = false;
+  $('#submitBtn').disabled = false;
+  $('#feedback').textContent = '';
+  $('#feedback').className = 'feedback';
+  $('#hintBtn').style.display = '';
+
+  setTimeout(() => inp.focus(), 220);
+}
+
+function checkAnswer(){
+  const r = RIDDLES[current];
+  const inp = $('#answerInput');
+  const fb = $('#feedback');
+  const val = normalize(inp.value);
+
+  if(!val){
+    fb.textContent = 'Tulis dulu jawabannya ya.';
+    fb.className = 'feedback no';
+    return;
+  }
+
+  const correct = r.answers.some(a => {
+    const na = normalize(a);
+    return val === na || val.includes(na) || (na.includes(val) && val.length >= 3);
+  });
+
+  if(correct){
+    fb.textContent = 'Benar! Hebat.';
+    fb.className = 'feedback ok';
+    inp.disabled = true;
+    $('#submitBtn').disabled = true;
+    $('#hintBtn').style.display = 'none';
+    burst(70, window.innerWidth / 2, window.innerHeight * 0.5);
+
+    if(current < RIDDLES.length - 1){
+      speak('Benar! Hebat. Lanjut ke teka-teki berikutnya.');
+      setTimeout(() => {
+        current++;
+        renderRiddle();
+        speak(RIDDLES[current].q, { rate: 0.92 });
+      }, 1400);
+    }else{
+      speak('Benar semua! Sekarang, ini kejutannya. Selamat ulang tahun, Hani!');
+      setTimeout(goFinale, 1300);
+    }
+  }else{
+    fb.textContent = 'Belum tepat, coba lagi ya.';
+    fb.className = 'feedback no';
+    speak('Belum tepat, coba lagi ya.');
+    inp.select();
+    void fb.offsetWidth;
+  }
+}
+
+$('#submitBtn').addEventListener('click', checkAnswer);
+$('#answerInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') checkAnswer();
+});
+$('#hintBtn').addEventListener('click', () => {
+  $('#qHint').classList.add('show');
+  speak(RIDDLES[current].hint, { rate: 0.9 });
+  $('#hintBtn').style.display = 'none';
+});
+
+/* ============================================================
+   16. FINALE
+   ============================================================ */
+function goFinale(){
+  showScreen(4);
+  setTimeout(() => {
+    burst(180, window.innerWidth * 0.5, window.innerHeight * 0.35);
+    setTimeout(() => burst(120, window.innerWidth * 0.25, window.innerHeight * 0.45), 260);
+    setTimeout(() => burst(120, window.innerWidth * 0.75, window.innerHeight * 0.45), 480);
+  }, 180);
+}
+
+$('#blowBtn').addEventListener('click', () => {
+  const cake = $('#cakeSvg');
+  if(cake.classList.contains('blown')) return;
+  cake.classList.add('blown');
+  $('#blowBtn').textContent = 'Yeay!';
+  burst(220, window.innerWidth / 2, window.innerHeight * 0.4);
+  setTimeout(() => burst(140, window.innerWidth * 0.2, window.innerHeight * 0.5), 300);
+  setTimeout(() => burst(140, window.innerWidth * 0.8, window.innerHeight * 0.5), 560);
+  speak('Hup! Lilinnya mati. Selamat ulang tahun Hani, semoga semua doamu terkabul.');
+  setTimeout(() => playMelody(), 1400);
+});
+
+$('#songBtn').addEventListener('click', () => {
+  if(musicPlaying){ stopMelody(); return; }
+  stopSpeak();
+  playMelody();
+  speak('Selamat ulang tahun, selamat ulang tahun, selamat ulang tahun Hani, selamat ulang tahun!', { rate: 0.85, pitch: 1.2 });
+});
+
+$('#againBtn').addEventListener('click', () => {
+  stopSpeak();
+  stopMelody();
+  confettiParts = [];
+  $('#cakeSvg').classList.remove('blown');
+  $('#blowBtn').textContent = 'Tiup Lilin';
+  current = 0;
+  showScreen(0);
+});
+
+/* ============================================================
+   17. CONTROL BUTTONS
+   ============================================================ */
+function updateSoundBtn(){
+  $('#soundBtn').innerHTML = soundOn
+    ? `<svg viewBox="0 0 24 24" fill="none">
+         <path d="M11 5 6.5 9H3v6h3.5L11 19V5z" fill="#3d2b4f"/>
+         <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#3d2b4f" stroke-width="2.2" stroke-linecap="round"/>
+       </svg>`
+    : `<svg viewBox="0 0 24 24" fill="none">
+         <path d="M11 5 6.5 9H3v6h3.5L11 19V5z" fill="#3d2b4f"/>
+         <path d="M15.5 9.5l6 5M21.5 9.5l-6 5" stroke="#3d2b4f" stroke-width="2.2" stroke-linecap="round"/>
+       </svg>`;
+}
+updateSoundBtn();
+
+$('#soundBtn').addEventListener('click', () => {
+  soundOn = !soundOn;
+  $('#soundBtn').classList.toggle('off', !soundOn);
+  if(!soundOn) stopSpeak();
+  updateSoundBtn();
+  if(soundOn) speak('Suara dinyalakan.');
+});
+
+$('#musicBtn').addEventListener('click', () => {
+  if(musicPlaying) stopMelody();
+  else { ensureCtx(); playMelody(); }
+});
+updateMusicBtn();
+
+/* ============================================================
+   18. MISC
+   ============================================================ */
+document.addEventListener('pointerdown', function once(){
+  ensureCtx();
+  document.removeEventListener('pointerdown', once);
+}, { once: true });
+
+document.addEventListener('click', (e) => {
+  if(e.target.closest('button, input, a')) return;
+  burst(16, e.clientX, e.clientY);
+});
+
+window.addEventListener('pagehide', stopSpeak);
+
+/* Block context menu ringan (biar source nggak gampang diintip) — opsional */
+document.addEventListener('contextmenu', (e) => {
+  if(!isUnlocked) e.preventDefault();
+});
+</script>
+</body>
+</html>
